@@ -10,6 +10,8 @@ public class Restaurant {
     public LocalTime openingTime;
     public LocalTime closingTime;
     private List<Item> menu = new ArrayList<Item>();
+    private int sum=0,total=0;
+    private List<List<String>> itemN=new ArrayList<List<String>>();
 
     public Restaurant(String name, String location, LocalTime openingTime, LocalTime closingTime) {
         this.name = name;
@@ -20,9 +22,12 @@ public class Restaurant {
 
     public boolean isRestaurantOpen() {
         //DELETE ABOVE RETURN STATEMENT AND WRITE CODE HERE
-        boolean b=false;
-        b= getCurrentTime().isAfter(openingTime) && getCurrentTime().isBefore(closingTime);
-        return b;
+
+        if( getCurrentTime().isAfter(openingTime) && getCurrentTime().isBefore(closingTime))
+            return true;
+        else
+            return false;
+
     }
 
     public LocalTime getCurrentTime(){ return  LocalTime.now(); }
@@ -30,7 +35,6 @@ public class Restaurant {
     public List<Item> getMenu() {
 
         //DELETE ABOVE RETURN STATEMENT AND WRITE CODE HERE
-        //        return menu;
         return Collections.unmodifiableList(menu);
     }
 
@@ -66,6 +70,28 @@ public class Restaurant {
 
     public String getName() {
         return name;
+    }
+
+    public int addOrRemoveItems(List<String> it, int add){
+        for(Item item:menu){
+            for (int i=0;i<it.size();i++){
+                if((add==1)&&item.getName().equals(it.get(i))&&(!(itemN.contains(Collections.singletonList(it.get(i)))) )){
+                    itemN.add(Collections.singletonList(it.get(i)));
+                    sum=sum+item.getPrice();
+                }
+                else if ((add==0)&&item.getName().equals(it.get(i))&&(itemN.contains(Collections.singletonList(it.get(i))))){
+                    itemN.remove(Collections.singletonList(it.get(i)));
+                    sum=sum-item.getPrice();
+                }
+            }
+        }
+        total=total+sum;
+        return sum;
+
+    }
+    public String getTotalPrice(){
+        String a= "Your order will cost: ₹"+sum;
+        return a;
     }
 
 }

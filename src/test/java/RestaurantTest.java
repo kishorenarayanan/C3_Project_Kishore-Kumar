@@ -8,7 +8,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RestaurantTest {
-    Restaurant restaurant;
+    Restaurant restaurant=new Restaurant("Amelie's cafe","Chennai",LocalTime.parse("09:00:00"),LocalTime.parse("22:00:00"));
     //REFACTOR ALL THE REPEATED LINES OF CODE
 
     //>>>>>>>>>>>>>>>>>>>>>>>>>OPEN/CLOSED<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -17,10 +17,8 @@ class RestaurantTest {
     public void is_restaurant_open_should_return_true_if_time_is_between_opening_and_closing_time(){
         //WRITE UNIT TEST CASE HERE
         Restaurant restaurants= Mockito.spy(restaurant);
-
         LocalTime getCurrentTime=LocalTime.parse("15:18:23");
         Mockito.when(restaurants.getCurrentTime()).thenReturn(getCurrentTime);
-//        boolean isRestaurantO=library.isRestaurantOpen(restaurant);
         assertTrue(restaurants.isRestaurantOpen());
     }
 
@@ -76,7 +74,8 @@ class RestaurantTest {
     //<<<<<<<<<<<<<<<<<<<<<<<MENU>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
     //<<<<<<<<<<<<<<<<<<<<<<<Add Items to get the total cost>>>>>>>>>>>>>>>>>>>>>>>>
-    //When the items from menu are selected, total cost of selected items should be displayed
+    //When the items from menu are selected,
+    // total cost of selected items should be displayed
 
     @Test
     public void add_items_from_menu_to_show_total_cost(){
@@ -86,11 +85,27 @@ class RestaurantTest {
         restaurant.addToMenu("Sweet corn soup",119);
         restaurant.addToMenu("Vegetable lasagne", 269);
 
-        int initialMenuSize = restaurant.getMenu().size();
+
         restaurant.addToMenu("Sizzling brownie",319);
 
         restaurant.addOrRemoveItems(Arrays.asList("Sizzling brownie","Sweet corn soup")  ,1);
 
         assertEquals("Your order will cost: ₹438",restaurant.getTotalPrice());
+    }
+    //When the items from menu are selected/removed,
+    // total cost of selected/modified items should be adjusted and displayed
+    @Test
+    public void remove_items_from_menu_to_remaining_total_cost(){
+        LocalTime openingTime = LocalTime.parse("10:30:00");
+        LocalTime closingTime = LocalTime.parse("22:00:00");
+        restaurant =new Restaurant("Amelie's cafe","Chennai",openingTime,closingTime);
+        restaurant.addToMenu("Sweet corn soup",119);
+        restaurant.addToMenu("Vegetable lasagne", 269);
+
+        restaurant.addToMenu("Sizzling brownie",319);
+
+        restaurant.addOrRemoveItems(Arrays.asList("Sizzling brownie","Vegetable lasagne")  ,1);
+        restaurant.addOrRemoveItems(Arrays.asList("Sizzling brownie")  ,0);
+        assertEquals("Your order will cost: ₹269",restaurant.getTotalPrice());
     }
 }
